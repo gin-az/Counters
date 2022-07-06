@@ -1,62 +1,54 @@
-import React, {FC, useState} from 'react';
-import {CounterForm} from "../CounterForm";
-import {ICounter} from "../../interfaces";
-import {CounterList} from "../CounterList";
+import React, { FC } from 'react';
+import { CounterForm } from "../CounterForm";
+import { ICounter, ICountersState } from "../../interfaces";
+import { CounterList} from "../CounterList";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  ADD_COUNTER,
+  INCREMENT_COUNTER,
+  REMOVE_COUNTER
+} from "../../store/actions";
 
 declare var confirm: (question: string) => boolean;
 
 export const CountersPage: FC = () => {
-  const [counters, setCounters] = useState<ICounter[]>([]);
+  const counters: ICounter[] = useSelector((state: ICountersState) => state?.counters);
   const totalCount = (counters.reduce((acc, num) => acc + num.value, 0));
+  const dispatch = useDispatch();
 
-    const addCounter = ():void => {
-      const newCount: ICounter = {
-        value: totalCount ?? 0,
-        id: Date.now(),
-      }
-      setCounters(prev => [...prev, newCount]);
-    }
+  const delCounter = (count: number) => dispatch({
+    type: REMOVE_COUNTER,
+    payload: count ?? 0
+  });
+
+  const addCounter = () => dispatch({
+    type: ADD_COUNTER,
+    payload: totalCount
+  });
 
   const incCounterEverySec = () => {
     let k = 0;
-    setCounters(counters.map(counter => {
+    counters.map(counter => {
       k++;
-      if (k % 4 === 0) counter.value++;
-      return counter;
-    }))
-  }
+      if (k % 4 === 0)
+        dispatch({
+          type: INCREMENT_COUNTER,
+          payload: counter.id
+        });
+    });
+  };
 
   const removeCounter = (id: number) => {
     const isOkRemove = confirm('Вы уверены, что хотите удалить элемент?');
-    isOkRemove && setCounters(prev =>
-      prev.filter(counter => counter.id !== id))
+    isOkRemove && delCounter(id);
   }
-
-  const incrementCounter = (id: number) => {
-    setCounters(counters.map(counter => {
-      if (counter.id === id) counter.value++;
-        return counter;
-    }))
-  }
-
-  const decrementCounter = (id: number) => {
-    setCounters(counters.map(counter => {
-      if (counter.id === id) counter.value--;
-      return counter;
-    }))
-  }
-
-  console.log('counters', counters)
 
   return (
     <>
       <CounterForm onAddCounter={addCounter} />
         <CounterList
-          counters={counters}
           incCounterEverySec={incCounterEverySec}
           onRemoveCounter={removeCounter}
-          onIncrementCounter={incrementCounter}
-          onDecrementCounter={decrementCounter}
         />
     </>
   );

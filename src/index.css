@@ -35,7 +35,3 @@ code {
 .todo label > * {
   margin-right: 0.5rem;
 }
-
-.todo i {
-  z-index: 2;
-}

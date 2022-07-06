@@ -1,10 +1,10 @@
 import React, {FC} from 'react';
 import { Routes, Route } from 'react-router-dom';
-import {Navbar} from "./components/Navbar";
-import {CountersPage} from "./components/Pages/CountersPage";
-import {AboutPage} from "./components/Pages/AboutPage";
+import { Navbar } from "./components/Navbar";
+import { CountersPage } from "./components/Pages/CountersPage";
+import { AboutPage } from "./components/Pages/AboutPage";
 
-const App: FC = () => {
+export const App: FC = () => {
 
   return (
     <>
@@ -14,10 +14,7 @@ const App: FC = () => {
           <Route path="/" element={<CountersPage />}/>
           <Route path="about" element={<AboutPage />}/>
         </Routes>
-
       </div>
     </>
   );
-}
-
-export default App;
+};

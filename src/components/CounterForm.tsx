@@ -1,8 +1,8 @@
 import React from 'react';
 
 interface ITodoFormProps {
-  onAddCounter(value: number): void
-}
+  onAddCounter(value: number): void;
+};
 
 export const CounterForm: React.FC<ITodoFormProps> = props => {
 
